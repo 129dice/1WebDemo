@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.mapper.PowerMapper">
+    <!--名称不同不能自动封装-->
+    <resultMap id="powerResultMap" type="com.pojo.Power">
+        <result column="power_id" property="powerId"/>
+        <result column="power_name" property="powerName"/>
+        <result column="power_pll" property="powerPll"/>
+        <result column="power_price" property="powerPrice"/>
+        <result column="power_company" property="powerCompany"/>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="powerId">
+        insert into item_power(power_name,power_pll,power_price,power_company)
+        VALUES (#{powerName},#{powerPll},#{powerPrice},#{powerCompany});
+
+    </insert>
+    <update id="revise">
+        update item_power SET
+            power_name =#{powerName},
+            power_pll=#{powerPll},
+            power_price=#{powerPrice},
+            power_company=#{powerCompany}
+         where power_id = #{powerId}
+    </update>
+
+
+    <delete id="deleteByIds">
+        delete from item_power where power_id in
+        <foreach collection="ids" item="power_id" separator="," open="(" close=")">
+            #{power_id}
+
+        </foreach>
+
+
+    </delete>
+    <delete id="deleteByPowerId">
+        delete from  item_power where power_id =#{id}
+
+    </delete>
+
+    <select id="selectAll" resultMap="powerResultMap">
+        select * from item_power;
+    </select>
+    <select id="rcAll" resultMap="powerResultMap">
+        select *from item_power where power_NAME in(#{power1},#{power2});
+    </select>
+</mapper>

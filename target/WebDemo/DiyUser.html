@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+<style>
+  .text {
+    font-size: 14px;
+  }
+
+  .item {
+    margin-bottom: 18px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  .box-card {
+    width: 480px;
+  }
+</style>
+</head>
+<body>
+<div id="ele">
+
+  <el-container>
+    <el-aside width="200px" style="hight:100%">
+      <div style="height: 1350px;">
+        <el-steps direction="vertical" :active="active">
+          <el-step title="Cpu" description="选择我的核心"></el-step>
+          <el-step title="Gpu" description="选择我的显卡"></el-step>
+          <el-step title="步骤 3" description="选择我的主板"></el-step>
+          <el-step title="步骤 3" description="选择我的内存"></el-step>
+          <el-step title="步骤 3" description="选择我的硬盘"></el-step>
+          <el-step title="步骤 3" description="选择我的电源"></el-step>
+          <el-step title="步骤 3" description="选择我的机箱"></el-step>
+
+        </el-steps>
+      </div>
+
+    </el-aside>
+
+    <el-main>
+
+<el-tabs :tab-position="tabPosition" style="height: 2000px;" v-model="activeName">
+  <el-tab-pane label="我的装配" name="myHw" >
+    <el-table :data="HwData">
+      <el-table-column property="cpu_name" label="cpu" width="200"></el-table-column>
+      <el-table-column property="gpu_name" label="显卡"></el-table-column>
+      <el-table-column property="mainboard_name" label="主板"></el-table-column>
+      <el-table-column property="ram_name" label="内存"></el-table-column>
+      <el-table-column property="rom_name" label="硬盘"></el-table-column>
+      <el-table-column property="power_name" label="电源"></el-table-column>
+      <el-table-column property="case_name" label="机箱"></el-table-column>
+      <el-table-column
+          align="center"
+          label="操作">
+        <!--        <el-row>
+                  <el-button type="primary">编辑</el-button>
+                  <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                </el-row>-->
+        <template slot-scope="scope">
+          <el-button  type="danger" @click="deleteRow( scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+
+    </el-table>
+    <br>
+    <el-button type="primary" @click="goUrl('Login.html')">退出登录</el-button>
+
+
+
+  </el-tab-pane>
+  <el-tab-pane label="选择cpu" name="cpu" text-color="red">
+    <!-- --------------------------推荐硬件------------------------------------------->
+    <el-divider>推荐硬件</el-divider>
+    <template>
+    <el-table
+        :data="cpuDataRc"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+        @selection-change="handleSelectionChange">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="商品 ID">
+              <span>{{ props.row.cpuId }}</span>
+            </el-form-item>
+            <el-form-item label="cpu名称">
+              <span>{{ props.row.cpuName}}</span>
+            </el-form-item>
+            <el-form-item label="价格">
+              <span>{{ props.row.cpuPrice }}</span>
+            </el-form-item>
+            <el-form-item label="核心数">
+              <span>{{ props.row.cpuCore }}</span>
+            </el-form-item>
+            <el-form-item label="线程数">
+              <span>{{ props.row.cpuThread }}</span>
+            </el-form-item>
+            <el-form-item label="额定功耗">
+              <span>{{ props.row.cpuPll }}</span>
+            </el-form-item>
+            <el-form-item label="功率">
+              <span>{{ props.row.cpuClockSpeed}}</span>
+            </el-form-item>
+            <el-form-item label="是否有核显">
+              <span>{{ props.row.cpuHaveGpu }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column
+          type="selection"
+          width="55">
+      </el-table-column>
+      <el-table-column
+          type="index"
+          width="50">
+      </el-table-column>
+      <el-table-column
+          label="cpu名称"
+          prop="cpuName">
+      </el-table-column>
+      <el-table-column
+          label="图片"
+          align="center"
+      >
+        <el-image
+            style="width: 100px; height: 100px"
+            src="http://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+            fit="contain">
+        </el-image>
+      </el-table-column>
+      <el-table-column
+          label="Cpu价格"
+          prop="cpuPrice">
+      </el-table-column>
+      <!--      <el-table-column
+                label="描述"
+                prop="desc">
+            </el-table-column>-->
+      <el-table-column
+          align="center"
+          label="操作">
+        <!--        <el-row>
+                  <el-button type="primary">编辑</el-button>
+                  <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                </el-row>-->
+        <template slot-scope="scope">
+          <el-button  type="primary" @click="qqqCpu(scope.row)">对比</el-button>
+          <el-button  type="success" @click="addcpu( scope.row)">加入装配</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </template>
+    <!-- --------------------------所有硬件------------------------------------------->
+    <el-divider>所有硬件</el-divider>
+    <template>
+      <el-table
+          :data="cpuData"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.cpuId }}</span>
+              </el-form-item>
+              <el-form-item label="cpu名称">
+                <span>{{ props.row.cpuName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.cpuPrice }}</span>
+              </el-form-item>
+              <el-form-item label="核心数">
+                <span>{{ props.row.cpuCore }}</span>
+              </el-form-item>
+              <el-form-item label="线程数">
+                <span>{{ props.row.cpuThread }}</span>
+              </el-form-item>
+              <el-form-item label="额定功耗">
+                <span>{{ props.row.cpuPll }}</span>
+              </el-form-item>
+              <el-form-item label="功率">
+                <span>{{ props.row.cpuClockSpeed}}</span>
+              </el-form-item>
+              <el-form-item label="是否有核显">
+                <span>{{ props.row.cpuHaveGpu }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="cpu名称"
+            prop="cpuName">
+        </el-table-column>
+        <el-table-column
+            label="图片"
+            align="center"
+        >
+          <el-image
+              style="width: 100px; height: 100px"
+              src="http://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+              fit="contain">
+          </el-image>
+        </el-table-column>
+        <el-table-column
+            label="Cpu价格"
+            prop="cpuPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="qqqCpu(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addcpu( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+
+  </el-tab-pane>
+
+  <el-tab-pane label="选择显卡" name="gpu">
+    <!--显卡推荐________----------------------------------------------------------->
+    <el-divider>推荐硬件</el-divider>
+    <el-table
+        :data="gpuDataRc"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+        @selection-change="handleSelectionChange">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="商品 ID">
+              <span>{{ props.row.gpuId }}</span>
+            </el-form-item>
+            <el-form-item label="显卡名称">
+              <span>{{ props.row.gpuName}}</span>
+            </el-form-item>
+            <el-form-item label="价格">
+              <span>{{ props.row.gpuPrice }}</span>
+            </el-form-item>
+            <el-form-item label="显卡频率">
+              <span>{{ props.row.gpuFreq }}</span>
+            </el-form-item>
+            <el-form-item label="显存频率">
+              <span>{{ props.row.gpuMemfreq }}</span>
+            </el-form-item>
+            <el-form-item label="显存容量">
+              <span>{{ props.row.gpuMem }}</span>
+            </el-form-item>
+            <el-form-item label="额定功耗">
+              <span>{{ props.row.gpuPll }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column
+          type="selection"
+          width="55">
+      </el-table-column>
+      <el-table-column
+          type="index"
+          width="50">
+      </el-table-column>
+      <el-table-column
+          label="显卡名称"
+          prop="gpuName">
+      </el-table-column>
+      <el-table-column
+          label="显存容量"
+          prop="gpuMem">
+      </el-table-column>
+      <el-table-column
+          label="Gpu价格"
+          prop="gpuPrice">
+      </el-table-column>
+      <!--      <el-table-column
+                label="描述"
+                prop="desc">
+            </el-table-column>-->
+      <el-table-column
+          align="center"
+          label="操作">
+        <template slot-scope="scope">
+          <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+          <el-button  type="success" @click="addgpu( scope.row)">加入装配</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+
+
+
+
+    <!--显卡选择________----------------------------------------------------------->
+    <el-divider>所有硬件</el-divider>
+    <el-table
+        :data="gpuData"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+        @selection-change="handleSelectionChange">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="商品 ID">
+              <span>{{ props.row.gpuId }}</span>
+            </el-form-item>
+            <el-form-item label="显卡名称">
+              <span>{{ props.row.gpuName}}</span>
+            </el-form-item>
+            <el-form-item label="价格">
+              <span>{{ props.row.gpuPrice }}</span>
+            </el-form-item>
+            <el-form-item label="显卡频率">
+              <span>{{ props.row.gpuFreq }}</span>
+            </el-form-item>
+            <el-form-item label="显存频率">
+              <span>{{ props.row.gpuMemfreq }}</span>
+            </el-form-item>
+            <el-form-item label="显存容量">
+              <span>{{ props.row.gpuMem }}</span>
+            </el-form-item>
+            <el-form-item label="额定功耗">
+              <span>{{ props.row.gpuPll }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column
+          type="selection"
+          width="55">
+      </el-table-column>
+      <el-table-column
+          type="index"
+          width="50">
+      </el-table-column>
+      <el-table-column
+          label="显卡名称"
+          prop="gpuName">
+      </el-table-column>
+      <el-table-column
+          label="显存容量"
+          prop="gpuMem">
+      </el-table-column>
+      <el-table-column
+          label="Gpu价格"
+          prop="gpuPrice">
+      </el-table-column>
+      <!--      <el-table-column
+                label="描述"
+                prop="desc">
+            </el-table-column>-->
+      <el-table-column
+          align="center"
+          label="操作">
+        <template slot-scope="scope">
+          <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+          <el-button  type="success" @click="addgpu( scope.row)">加入装配</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+  </el-tab-pane>
+  <el-tab-pane label="选择主板" name="Mb">
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="mbDataRc"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.mbId }}</span>
+              </el-form-item>
+              <el-form-item label="主板名称">
+                <span>{{ props.row.mbName}}</span>
+              </el-form-item>
+              <el-form-item label="主板芯片">
+                <span>{{ props.row.mbChGrade }}</span>
+              </el-form-item>
+              <el-form-item label="内存插槽数">
+                <span>{{ props.row.mbMem }}</span>
+              </el-form-item>
+              <el-form-item label="M.2插槽数">
+                <span>{{ props.row.mbM2 }}</span>
+              </el-form-item>
+              <el-form-item label="Sata插槽数">
+                <span>{{ props.row.mbSata }}</span>
+              </el-form-item>
+              <el-form-item label="有无网卡">
+                <span>{{ props.row.mbWifi }}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.mbPrice }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="主板名称"
+            prop="mbName">
+        </el-table-column>
+        <el-table-column
+            label="主板芯片"
+            prop="mbChGrade">
+        </el-table-column>
+        <el-table-column
+            label="主板价格"
+            prop="mbPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addMb( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="mbData"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.mbId }}</span>
+              </el-form-item>
+              <el-form-item label="主板名称">
+                <span>{{ props.row.mbName}}</span>
+              </el-form-item>
+              <el-form-item label="主板芯片">
+                <span>{{ props.row.mbChGrade }}</span>
+              </el-form-item>
+              <el-form-item label="内存插槽数">
+                <span>{{ props.row.mbMem }}</span>
+              </el-form-item>
+              <el-form-item label="M.2插槽数">
+                <span>{{ props.row.mbM2 }}</span>
+              </el-form-item>
+              <el-form-item label="Sata插槽数">
+                <span>{{ props.row.mbSata }}</span>
+              </el-form-item>
+              <el-form-item label="有无网卡">
+                <span>{{ props.row.mbWifi }}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.mbPrice }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="主板名称"
+            prop="mbName">
+        </el-table-column>
+        <el-table-column
+            label="主板芯片"
+            prop="mbChGrade">
+        </el-table-column>
+        <el-table-column
+            label="主板价格"
+            prop="mbPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addMb( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+
+  </el-tab-pane>
+<!-- 选择内存________---------------------------------------------------------- -->
+  <el-tab-pane label="选择内存" name="ram">
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="ramDataRc"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="内存 ID">
+                <span>{{ props.row.ramId }}</span>
+              </el-form-item>
+              <el-form-item label="内存名称">
+                <span>{{ props.row.ramName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.ramPrice }}</span>
+              </el-form-item>
+              <el-form-item label="内存频率">
+                <span>{{ props.row.ramFreq }}</span>
+              </el-form-item>
+              <el-form-item label="内存容量">
+                <span>{{ props.row.ramCap }}</span>
+              </el-form-item>
+              <el-form-item label="生产公司">
+                <span>{{ props.row.ramCompany }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="内存名称"
+            prop="ramName">
+        </el-table-column>
+        <el-table-column
+            label="内存容量"
+            prop="ramCap">
+        </el-table-column>
+        <el-table-column
+            label="内存价格"
+            prop="ramPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            align="center"
+            label="操作">
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addRam( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="ramData"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="内存 ID">
+                <span>{{ props.row.ramId }}</span>
+              </el-form-item>
+              <el-form-item label="内存名称">
+                <span>{{ props.row.ramName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.ramPrice }}</span>
+              </el-form-item>
+              <el-form-item label="内存频率">
+                <span>{{ props.row.ramFreq }}</span>
+              </el-form-item>
+              <el-form-item label="内存容量">
+                <span>{{ props.row.ramCap }}</span>
+              </el-form-item>
+              <el-form-item label="生产公司">
+                <span>{{ props.row.ramCompany }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="内存名称"
+            prop="ramName">
+        </el-table-column>
+        <el-table-column
+            label="内存容量"
+            prop="ramCap">
+        </el-table-column>
+        <el-table-column
+            label="内存价格"
+            prop="ramPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            align="center"
+            label="操作">
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addRam( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+
+  </el-tab-pane>
+
+
+<!-- --------------------------- 硬盘选择-------------------------------->
+  <el-tab-pane label="选择硬盘" name="rom">
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="romDataRc"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.romId }}</span>
+              </el-form-item>
+              <el-form-item label="硬盘名称">
+                <span>{{ props.row.romName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.romPrice }}</span>
+              </el-form-item>
+              <el-form-item label="生产公司">
+                <span>{{ props.row.romCompany }}</span>
+              </el-form-item>
+              <el-form-item label="硬盘容量">
+                <span>{{ props.row.romCap }}</span>
+              </el-form-item>
+              <el-form-item label="硬盘种类">
+                <span>{{ props.row.romType }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="硬盘名称"
+            prop="romName">
+        </el-table-column>
+        <el-table-column
+            label="硬盘价格"
+            prop="romPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            label="硬盘种类"
+            prop="romType">
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addRom( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="romData"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.romId }}</span>
+              </el-form-item>
+              <el-form-item label="硬盘名称">
+                <span>{{ props.row.romName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.romPrice }}</span>
+              </el-form-item>
+              <el-form-item label="生产公司">
+                <span>{{ props.row.romCompany }}</span>
+              </el-form-item>
+              <el-form-item label="硬盘容量">
+                <span>{{ props.row.romCap }}</span>
+              </el-form-item>
+              <el-form-item label="硬盘种类">
+                <span>{{ props.row.romType }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="硬盘名称"
+            prop="romName">
+        </el-table-column>
+        <el-table-column
+            label="硬盘价格"
+            prop="romPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            label="硬盘种类"
+            prop="romType">
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addRom( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+
+  </el-tab-pane>
+<!-- -----------------------电源选择-------------------------- -->
+  <el-tab-pane label="选择电源" name="power">
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="powerDataRc"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.powerId }}</span>
+              </el-form-item>
+              <el-form-item label="硬盘名称">
+                <span>{{ props.row.powerName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.powerPrice }}</span>
+              </el-form-item>
+              <el-form-item label="生产公司">
+                <span>{{ props.row.powerCompany }}</span>
+              </el-form-item>
+              <el-form-item label="电源功率">
+                <span>{{ props.row.powerPll }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="电源名称"
+            prop="powerName">
+        </el-table-column>
+        <el-table-column
+            label="电源价格"
+            prop="powerPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            label="电源功率"
+            prop="powerPll">
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addPower( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="powerData"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.powerId }}</span>
+              </el-form-item>
+              <el-form-item label="硬盘名称">
+                <span>{{ props.row.powerName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.powerPrice }}</span>
+              </el-form-item>
+              <el-form-item label="生产公司">
+                <span>{{ props.row.powerCompany }}</span>
+              </el-form-item>
+              <el-form-item label="电源功率">
+                <span>{{ props.row.powerPll }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="电源名称"
+            prop="powerName">
+        </el-table-column>
+        <el-table-column
+            label="电源价格"
+            prop="powerPrice">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            label="电源功率"
+            prop="powerPll">
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addPower( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+
+  </el-tab-pane>
+  <!----------------------------选择机箱------------------------------------------------>
+
+  <el-tab-pane label="选择机箱" name="case">
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="caseDataRc"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.caseId }}</span>
+              </el-form-item>
+              <el-form-item label="机箱名称">
+                <span>{{ props.row.caseName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.casePrice }}</span>
+              </el-form-item>
+              <el-form-item label="大小">
+                <span>{{ props.row.caseType }}</span>
+              </el-form-item>
+              <el-form-item label="颜色">
+                <span>{{ props.row.caseColor }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="机箱名称"
+            prop="caseName">
+        </el-table-column>
+        <el-table-column
+            label="机箱颜色"
+            prop="caseColor">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            label="价格"
+            prop="casePrice">
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addCase( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+
+    <template>
+      <el-divider>推荐硬件</el-divider>
+      <el-table
+          :data="caseData"
+          style="width: 100%"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="商品 ID">
+                <span>{{ props.row.caseId }}</span>
+              </el-form-item>
+              <el-form-item label="机箱名称">
+                <span>{{ props.row.caseName}}</span>
+              </el-form-item>
+              <el-form-item label="价格">
+                <span>{{ props.row.casePrice }}</span>
+              </el-form-item>
+              <el-form-item label="大小">
+                <span>{{ props.row.caseType }}</span>
+              </el-form-item>
+              <el-form-item label="颜色">
+                <span>{{ props.row.caseColor }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
+        <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
+        <el-table-column
+            label="机箱名称"
+            prop="caseName">
+        </el-table-column>
+        <el-table-column
+            label="机箱颜色"
+            prop="caseColor">
+        </el-table-column>
+        <!--      <el-table-column
+                  label="描述"
+                  prop="desc">
+              </el-table-column>-->
+        <el-table-column
+            label="价格"
+            prop="casePrice">
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="操作">
+          <!--        <el-row>
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                  </el-row>-->
+          <template slot-scope="scope">
+            <el-button  type="primary" @click="compare(scope.row)">对比</el-button>
+            <el-button  type="success" @click="addCase( scope.row)">加入装配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+
+
+  </el-tab-pane>
+<!--__-------------------- 添加结果---------------------------------- -->
+  <el-tab-pane label="已选择的硬件" name="myHardware">
+
+
+
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>cpu选择</span>
+
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goCpu">去选择</el-button>
+      </div>
+      <div class="text item" v-model="myCpu">
+        cpu名称:{{myCpu.cpuName}}<br>
+        cpu价格:{{myCpu.cpuPrice}}<br>
+        cpu核心数:{{myCpu.cpuCore}}<br>
+        cpu线程数:{{myCpu.cpuThread}}<br>
+        cpu频率:{{myCpu.cpuClockSpeed}}<br>
+        额定频率:{{myCpu.cpuPll}}(W)<br>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="deleteMyCpu">删除</el-button>
+      </div>
+    </el-card>
+
+
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>显卡选择</span>
+
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goGpu">去选择</el-button>
+      </div>
+      <div class="text item" v-model="myGpu">
+        显卡名称:{{myGpu.gpuName}}<br>
+        显卡价格:{{myGpu.gpuPrice}}<br>
+        显存频率:{{myGpu.gpuMemfreq}}(GHZ)<br>
+        显存容量:{{myGpu.gpuMem}}(G)<br>
+        额定功率:{{myGpu.gpuPll}}(W)<br>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="deleteMyGpu">删除</el-button>
+      </div>
+    </el-card>
+
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>主板选择(注意查看主板芯片组与cpu是否相同</span>
+
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goMb">去选择</el-button>
+      </div>
+      <div class="text item" v-model="myGpu">
+        芯片组:{{myMb.mbChGrade}}<br>
+        主板名称:{{myMb.mbName}}<br>
+        主板内存插槽数:{{myMb.mbMem}}<br>
+        主板价格:{{myMb.mbPrice}}<br>
+        主板M.2插槽数:{{myMb.mbM2}}<br>
+        主板Stat插槽数:{{myMb.mbSata}}<br>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="deleteMyMb">删除</el-button>
+      </div>
+    </el-card>
+
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>内存选择</span>
+
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goRam">去选择</el-button>
+      </div>
+      <div class="text item" v-model="myRam">
+        内存名称:{{myRam.ramName}}<br>
+        价格:{{myRam.ramPrice}}<br>
+        主频:{{myRam.ramFreq}}<br>
+        容量:{{myRam.ramCap}}(G)<br>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="deleteMyRam">删除</el-button>
+      </div>
+    </el-card>
+<!--   rom -->
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>硬盘选择</span>
+
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goRom">去选择</el-button>
+      </div>
+      <div class="text item" v-model="myRom">
+        名称:{{myRom.romName}}<br>
+        价格:{{myRom.romPrice}}<br>
+        硬盘类型:{{myRom.romType}}<br>
+        容量:{{myRom.romCap}}(G)<br>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="deleteMyRom">删除</el-button>
+      </div>
+    </el-card>
+<!--power    -->
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>电源选择</span>
+
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goPower">去选择</el-button>
+      </div>
+      <div class="text item" v-model="myPower">
+        名称:{{myPower.powerName}}<br>
+        价格:{{myPower.powerPrice}}<br>
+        功率:{{myPower.powerPll}}<br>
+        生产公司:{{myPower.powerCompany}}<br>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="deleteMyPower">删除</el-button>
+      </div>
+    </el-card>
+<!--    case-->
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>机箱选择</span>
+
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goCase">去选择</el-button>
+      </div>
+      <div class="text item" v-model="myCase">
+        名称:{{myCase.caseName}}<br>
+        价格:{{myCase.casePrice}}<br>
+        支持版型:{{myCase.caseType}}<br>
+        颜色:{{myCase.caseColor}}<br>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="deleteMyCase">删除</el-button>
+      </div>
+    </el-card>
+<br>
+    <el-button type="primary" @click="addAll">添加到我的装配</el-button>
+
+  </el-tab-pane>
+</el-tabs>
+      </el-main>
+    </el-container>
+//cpu对比
+  <el-dialog title="硬件对比" :visible.sync="dialogVisiblecpu">
+    <el-table :data="formCpu">
+      <el-table-column property="cpuName" label="名称" width="200"></el-table-column>
+      <el-table-column property="cpuPrice" label="价格"></el-table-column>
+      <el-table-column property="cpuCore" label="核心数"></el-table-column>
+      <el-table-column property="cpuThread" label="线程数"></el-table-column>
+      <el-table-column property="cpuClockSpeed" label="主频"></el-table-column>
+      <el-table-column property="cpuPll" label="额定功率"></el-table-column>
+    </el-table>
+  </el-dialog>
+
+
+
+
+
+</div>
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui@2.15.13/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui@2.15.13/lib/index.js"></script>
+<script>
+  new Vue({
+    el: "#ele",
+    mounted(){
+
+
+      this.selectAllCpu();
+      this.selectAllGpu();
+      this.selectAllRam();
+      this.selectAllRom();
+      this.selectAllPower();
+      this.selectAllCase();
+      this.selectAllMb();
+      this.enter1();
+      this.RcCpu();
+      this.selectMyHw();
+
+
+    },
+
+
+    methods: {
+
+
+      /*cpu推荐*/
+
+
+      enter1(){
+        var _this = this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/userServlet/getUser"
+        }).then(function (resp) {
+          _this.userId = resp.data;
+          console.log(_this.userId);
+        })
+
+      },
+      selectAllCpu() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/cpuServlet/selectAll"
+        }).then(function (resp) {
+          _this.cpuData = resp.data;
+        })
+
+      },
+      selectAllGpu() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/gpuServlet/selectAll"
+        }).then(function (resp) {
+          _this.gpuData = resp.data;
+        })
+      },
+
+      selectAllMb() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/mbServlet/selectAll"
+        }).then(function (resp) {
+          _this.mbData = resp.data;
+        })
+      },
+      //ram检索
+      selectAllRam() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/ramServlet/selectAll"
+        }).then(function (resp) {
+          _this.ramData = resp.data;
+        })
+      },
+      //rom检索
+      selectAllRom() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/romServlet/selectAll"
+        }).then(function (resp) {
+          _this.romData = resp.data;
+        })
+      },
+      //电源检索
+      selectAllPower() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/powerServlet/selectAll"
+        }).then(function (resp) {
+          _this.powerData = resp.data;
+        })
+      },
+
+      selectAllCase() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/caseServlet/selectAll"
+        }).then(function (resp) {
+          _this.caseData = resp.data;
+        })
+      },
+      selectMyHw() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/addServlet/selectMy",
+        }).then(function (resp) {
+          _this.HwData = resp.data;
+          console.log(_this.HwData)
+        })
+      },
+
+      RcCpu(){
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/cpuServlet/selectRc"
+        }).then(function (resp) {
+          _this.cpuDataRc = resp.data;
+          console.log(_this.cpuDataRc)
+        })
+
+      },
+
+      //添加cpu
+      addcpu(row){
+        this.myCpu=row;
+        this.active=2;
+        this.activeName="gpu";
+        this.$message({
+          message: '恭喜你，添加成功',
+          type: 'success'
+        });
+        var _this = this;
+        console.log(this.myCpu.cpuName)
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/cpuServlet/RcAll",
+          data:_this.myCpu.cpuName
+        }).then(function (resp) {
+          _this.gpuDataRc=resp.data;
+          console.log(_this.gpuDataRc)
+
+        })
+
+      },
+      //添加gpu
+      addgpu(row){
+        this.myGpu=row;
+        this.active=3;
+        this.activeName="Mb";
+        this.$message({
+          message: '恭喜你，添加成功',
+          type: 'success'
+        });
+        var _this = this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/mbServlet/RcMbAll",
+          data:_this.myCpu.cpuName
+        }).then(function (resp) {
+          _this.mbDataRc=resp.data;
+          console.log(_this.mbDataRc)
+
+        })
+      },
+      addMb(row){
+        this.myMb=row;
+        this.active=4;
+        this.activeName="ram";
+        this.$message({
+          message: '恭喜你，添加成功',
+          type: 'success'
+        });
+
+        var _this = this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/ramServlet/RcRamAll",
+          data:_this.myCpu.cpuName
+        }).then(function (resp) {
+          _this.ramDataRc=resp.data;
+          console.log(_this.ramDataRc)
+
+        })
+      },
+      addRam(row){
+        this.myRam=row;
+        this.active=5;
+        this.activeName="rom";
+        this.$message({
+          message: '恭喜你，添加成功',
+          type: 'success'
+        });
+
+        var _this = this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/romServlet/RcRomAll",
+          data:_this.myCpu.cpuName
+        }).then(function (resp) {
+          _this.romDataRc=resp.data;
+          console.log(_this.romDataRc)
+
+        })
+      },
+      addRom(row){
+        this.myRom=row;
+        this.active=6;
+        this.activeName="power";
+        this.$message({
+          message: '恭喜你，添加成功',
+          type: 'success'
+        });
+        var _this = this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/powerServlet/RcPowerAll",
+          data:_this.myCpu.cpuName
+        }).then(function (resp) {
+          _this.powerDataRc=resp.data;
+          console.log(_this.powerDataRc)
+
+        })
+
+
+      },
+
+      //添加电源
+      addPower(row){
+        this.myPower=row;
+        this.active=7;
+        this.activeName="case";
+        this.$message({
+          message: '恭喜你，添加成功',
+          type: 'success'
+        });
+        var _this = this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/caseServlet/RcCaseAll",
+          data:_this.myCpu.cpuName
+        }).then(function (resp) {
+          _this.caseDataRc=resp.data;
+          console.log(_this.caseDataRc)
+
+        })
+
+      },
+
+      //添加机箱
+      addCase(row){
+        this.myCase=row;
+        this.active=8;
+        this.activeName="myHardware";
+        this.$message({
+          message: '恭喜你，添加成功',
+          type: 'success'
+        });
+      },
+
+
+
+      //对比
+      qqqCpu(row){
+        if (this.jishu===0){
+          this.jishu=1;
+          this.formCpu[0]=row;
+        }
+        else if (this.jishu===1){
+          this.jishu=0;
+          this.formCpu[1]=row;
+          this.dialogVisiblecpu=true;
+        }
+      },
+      goCpu(){
+        this.activeName="cpu";
+      },
+      goGpu(){
+        this.activeName="gpu";
+      },
+      goMb(){
+        this.activeName="Mb";
+      },
+      goRam(){
+        this.activeName="ram";
+      },
+      goRom(){
+        this.activeName="rom";
+      },
+      goPower(){
+        this.activeName="power";
+      },
+      goCase(){
+        this.activeName="case";
+      },
+
+      deleteMyCpu(){
+        this.myCpu=[];
+      },
+      deleteMyGpu(){
+        this.myGpu=[];
+      },
+      deleteMyMb(){
+        this.myMb=[];
+      },
+      deleteMyRam(){
+        this.myRam=[];
+      },
+      deleteMyRom(){
+        this.myRom=[];
+      },
+      deleteMyPower(){
+        this.myPower=[];
+      },
+      deleteMyCase(){
+        this.myCase=[];
+      },
+//单个删除
+      deleteRow(row) {
+        this.deleteId = row.userid;
+        var _this = this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/addServlet/deleteByUserId",
+          data: _this.deleteId,
+        }).then(function (resp) {
+          if (resp.data == "success") {
+            _this.selectMyHw();
+            _this.$message({
+              message: '恭喜你，删除成功',
+              type: 'success'
+            });
+          }
+        })
+      },
+      goUrl(url) {
+        window.open(url, "_self")
+      },
+
+
+
+
+      addAll(){
+        var _this = this;
+        this.From.userid=this.userId;
+        this.From.cpu_name=this.myCpu.cpuName;
+        this.From.gpu_name=this.myGpu.gpuName;
+        this.From.mainboard_name=this.myMb.mbName;
+        this.From.ram_name=this.myRam.ramName;
+        this.From.rom_name=this.myRom.romName;
+        this.From.power_name=this.myPower.powerName;
+        this.From.case_name=this.myCase.caseName;
+        console.log(this.From)
+
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/addServlet/add",
+          data:_this.From
+        }).then(function (resp) {
+          if (resp.data == "success") {
+            _this.$message({
+              message: '恭喜你，添加成功',
+              type: 'success'
+            });
+          }
+        })
+
+      },
+
+    },
+    data() {
+      return {
+        tabPosition: 'right',
+        cpuData:[],
+        cpuDataRc:[],
+        gpuData:[],
+        gpuDataRc:[],
+        mbData:[],
+        mbDataRc:[],
+        ramData:[],
+        ramDataRc:[],
+        romData:[],
+        romDataRc:[],
+        powerData:[],
+        powerDataRc:[],
+        CaseData:[],
+        CaseDataRc:[],
+        HwData:[],
+        /*配件选择位置*/
+
+        userId:'',
+        active:1,
+        activeName:'cpu',
+        myCpu:[],
+        myGpu:[],
+        myMb:[],
+        myRam:[],
+        myRom:[],
+        myPower:[],
+        myCase:[],
+        From:{
+           userid:'',
+           cpu_name:'',
+           gpu_name:'',
+           mainboard_name:'',
+           ram_name:'',
+           rom_name:'',
+           power_name:'',
+           case_name:'',
+        },
+        jishu:0,
+        formCpu:[],
+
+        dialogVisiblecpu:false,
+        deleteId:'',
+        //单个删除
+
+
+
+      };
+    }
+  })
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+<!--
+CPU_NAME          varchar(100),
+gpu1_name          varchar(100),
+gpu2_name          varchar(100),
+mb1_name          varchar(100),
+mb2_name          varchar(100),
+ram1_name          varchar(100),
+ram2_name          varchar(100),
+rom1_name          varchar(100),
+rom2_name          varchar(100),
+power1_name          varchar(100),
+power2_name          varchar(100),
+case1_name          varchar(100),
+case2_name           varchar(100)-->

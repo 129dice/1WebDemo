@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.mapper.RomMapper">
+    <!--名称不同不能自动封装-->
+    <resultMap id="romResultMap" type="com.pojo.Rom">
+        <result column="rom_id"        property="romId"/>
+        <result column="rom_name"      property="romName"/>
+        <result column="rom_company"   property="romCompany"/>
+        <result column="rom_price" property="romPrice"/>
+        <result column="rom_cap" property="romCap"/>
+        <result column="rom_type" property="romType"/>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="romId">
+        insert into item_rom(rom_name, rom_company, rom_price, rom_cap, rom_type)
+        VALUES (#{romName},#{romCompany},#{romPrice},#{romCap},#{romType});
+
+    </insert>
+    <update id="revise">
+        update item_rom SET
+            rom_name=#{romName},
+            rom_company=#{romCompany},
+            rom_price=#{romPrice},
+            rom_cap=#{romCap},
+            rom_type =#{romType}
+         where rom_id = #{romId}
+    </update>
+
+
+    <delete id="deleteByIds">
+        delete from item_rom where rom_id in
+        <foreach collection="ids" item="rom_id" separator="," open="(" close=")">
+            #{rom_id}
+
+        </foreach>
+
+
+    </delete>
+    <delete id="deleteByRomId">
+        delete from  item_rom where rom_id =#{id}
+
+    </delete>
+
+    <select id="selectAll" resultMap="romResultMap">
+        select * from item_rom;
+    </select>
+    <select id="rcAll" resultMap="romResultMap">
+        select *from item_rom where Rom_NAME in(#{rom1},#{rom2});
+    </select>
+</mapper>

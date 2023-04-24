@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.mapper.AddMapper">
+    <!--名称不同不能自动封装-->
+    <resultMap id="caseResultMap" type="com.pojo.AddHw">
+
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="userid">
+        insert into user_diy(userid, cpu_name, gpu_name, mainboard_name, ram_name, rom_name, power_name, case_name)
+        VALUES (#{userid},
+                #{cpu_name},
+                #{gpu_name},
+                #{mainboard_name},
+                #{ram_name},
+                #{rom_name},
+                #{power_name},
+                #{case_name}
+               );
+    </insert>
+    <delete id="deleteByUserId">
+        delete from  user_diy where userid =#{id}
+
+    </delete>
+    <select id="selectAll" resultType="com.pojo.AddHw">
+        select *from user_diy;
+    </select>
+    <select id="selectMy" resultType="com.pojo.AddHw">
+        select *from user_diy where userid=#{userid}
+    </select>
+
+
+</mapper>

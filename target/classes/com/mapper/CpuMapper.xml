@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.mapper.CpuMapper">
+    <!--名称不同不能自动封装-->
+    <resultMap id="cpuResultMap" type="com.pojo.Cpu">
+        <result column="CPU_ID" property="cpuId"/>
+        <result column="CPU_NAME" property="cpuName"/>
+        <result column="CPU_PRICE" property="cpuPrice"/>
+        <result column="CPU_CORE" property="cpuCore"/>
+        <result column="CPU_THREAD" property="cpuThread"/>
+        <result column="CPU_HAVEGPU" property="cpuHaveGpu"/>
+        <result column="CPU_IMAGE" property="cpuImage"/>
+        <result column="CPU_PLL" property="cpuPll"/>
+        <result column="CPU_clockspeed" property="cpuClockSpeed"/>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="cpuId">
+        insert into item_cpu(cpu_name,cpu_price,cpu_core,cpu_thread,cpu_havegpu,cpu_pll,cpu_clockspeed)
+        VALUES (#{cpuName},#{cpuPrice},#{cpuCore},#{cpuThread},#{cpuHaveGpu},#{cpuPll},#{cpuClockSpeed});
+
+    </insert>
+    <update id="revise">
+        update item_cpu SET
+            cpu_name =#{cpuName},
+            cpu_price=#{cpuPrice},
+            cpu_core=#{cpuCore},
+            cpu_pll=#{cpuPll},
+            cpu_thread=#{cpuThread},
+            cpu_clockspeed=#{cpuClockSpeed}
+         where cpu_id = #{cpuId}
+    </update>
+
+
+    <delete id="deleteByIds">
+        delete from item_cpu where cpu_id in
+        <foreach collection="ids" item="cpu_id" separator="," open="(" close=")">
+            #{cpu_id}
+
+        </foreach>
+
+
+    </delete>
+    <delete id="deleteByCpuId">
+        delete from  item_cpu where CPU_ID =#{id}
+
+    </delete>
+
+    <select id="selectAll" resultMap="cpuResultMap">
+        select * from item_cpu;
+    </select>
+
+    <select id="selectRc" resultMap="cpuResultMap">
+        select *from item_cpu where CPU_ID=18 or CPU_ID=24
+    </select>
+
+    <select id="RcAll" resultType="com.pojo.recommend">
+        select *from recommend where CPU_NAME=#{cpu_name};
+    </select>
+</mapper>

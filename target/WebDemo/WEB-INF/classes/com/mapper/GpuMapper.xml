@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.mapper.GpuMapper">
+
+    <resultMap id="gpuResultMap" type="com.pojo.Gpu">
+        <result column="gpu_id" property="gpuId"/>
+        <result column="GPU_NAME" property="gpuName"/>
+        <result column="Gpu_freq" property="gpuFreq"/>
+        <result column="gpu_mem" property="gpuMem"/>
+        <result column="gpu_memfreq" property="gpuMemfreq"/>
+        <result column="gpu_price" property="gpuPrice"/>
+        <result column="gpu_pll" property="gpuPll"/>
+    </resultMap>
+    <insert id="add">
+        insert into item_gpu(gpu_name,gpu_freq,gpu_memfreq,gpu_mem,gpu_price,gpu_pll)
+        VALUES (#{gpuName},#{gpuFreq},#{gpuMemfreq},#{gpuMem},#{gpuPrice},#{gpuPll});
+    </insert>
+    <update id="revise">
+        update item_gpu SET
+                            GPU_NAME =#{gpuName},
+                            gpu_freq=#{gpuFreq},
+                            gpu_memfreq=#{gpuMemfreq},
+                            gpu_mem=#{gpuMem},
+                            gpu_price=#{gpuPrice},
+                            gpu_pll=#{gpuPll}
+        where gpu_id = #{gpuId}
+
+
+
+    </update>
+    <delete id="deleteByIds">
+        delete from item_gpu where gpu_id in
+        <foreach collection="ids" item="gpu_id" separator="," open="(" close=")">
+        #{gpu_id}
+        </foreach>
+
+    </delete>
+    <delete id="deleteByGpuId">
+        delete from  item_gpu where gpu_id =#{id}
+
+    </delete>
+    <!--名称不同不能自动封装-->
+
+
+
+    <select id="selectAll" resultMap="gpuResultMap">
+        select *from item_gpu;
+    </select>
+    <select id="rcAll" resultMap="gpuResultMap">
+        select *from item_gpu where GPU_NAME in(#{gpu1},#{gpu2});
+    </select>
+
+</mapper>

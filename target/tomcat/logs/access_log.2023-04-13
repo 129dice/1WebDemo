@@ -1,0 +1,17 @@
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:38 +0800] "GET /WebDemo HTTP/1.1" 302 - http-nio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:38 +0800] "GET /WebDemo HTTP/1.1" 302 - http-nio-8080-exec-3 0
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:38 +0800] "GET /WebDemo/ HTTP/1.1" 200 93 http-nio-8080-exec-2 163
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:38 +0800] "GET /WebDemo/ HTTP/1.1" 200 93 http-nio-8080-exec-4 3
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:38 +0800] "GET /favicon.ico HTTP/1.1" 404 682 http-nio-8080-exec-5 4
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:38 +0800] "GET /favicon.ico HTTP/1.1" 404 682 http-nio-8080-exec-6 0
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:40 +0800] "GET /WebDemo/Cpu.html HTTP/1.1" 304 - http-nio-8080-exec-7 5
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:40 +0800] "GET /WebDemo/js/axios.js HTTP/1.1" 304 - http-nio-8080-exec-8 2
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:42 +0800] "GET /WebDemo/cpuServlet/selectAll HTTP/1.1" 200 566 http-nio-8080-exec-10 1497
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:45 +0800] "GET /WebDemo/Gpu.html HTTP/1.1" 304 - http-nio-8080-exec-9 2
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:45 +0800] "GET /WebDemo/gpuServlet/selectAll HTTP/1.1" 200 210 http-nio-8080-exec-1 17
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:49 +0800] "POST /WebDemo/gpuServlet/delete HTTP/1.1" 200 7 http-nio-8080-exec-3 53
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:49 +0800] "GET /WebDemo/gpuServlet/selectAll HTTP/1.1" 200 108 http-nio-8080-exec-2 3
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:56 +0800] "POST /WebDemo/gpuServlet/add HTTP/1.1" 200 7 http-nio-8080-exec-4 19
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:56 +0800] "GET /WebDemo/gpuServlet/selectAll HTTP/1.1" 200 200 http-nio-8080-exec-5 3
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:59 +0800] "POST /WebDemo/gpuServlet/delete HTTP/1.1" 200 7 http-nio-8080-exec-6 6
+0:0:0:0:0:0:0:1 - - [13/Apr/2023:16:38:59 +0800] "GET /WebDemo/gpuServlet/selectAll HTTP/1.1" 200 108 http-nio-8080-exec-7 3

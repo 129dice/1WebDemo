@@ -1,0 +1,7 @@
+0:0:0:0:0:0:0:1 - - [04/Apr/2023:20:24:48 +0800] "GET /WebDemo HTTP/1.1" 302 - http-nio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [04/Apr/2023:20:24:49 +0800] "GET /WebDemo/ HTTP/1.1" 200 57 http-nio-8080-exec-3 709
+0:0:0:0:0:0:0:1 - - [04/Apr/2023:20:24:49 +0800] "GET /favicon.ico HTTP/1.1" 404 682 http-nio-8080-exec-2 4
+0:0:0:0:0:0:0:1 - - [04/Apr/2023:20:25:01 +0800] "GET /WebDemo/cpuSelectAllServlet HTTP/1.1" 500 8461 http-nio-8080-exec-4 1202
+0:0:0:0:0:0:0:1 - - [04/Apr/2023:20:29:01 +0800] "GET /WebDemo HTTP/1.1" 302 - http-nio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [04/Apr/2023:20:29:01 +0800] "GET /WebDemo/ HTTP/1.1" 200 57 http-nio-8080-exec-4 106
+0:0:0:0:0:0:0:1 - - [04/Apr/2023:20:29:12 +0800] "GET /WebDemo/cpuSelectAllServlet HTTP/1.1" 200 157 http-nio-8080-exec-3 1409

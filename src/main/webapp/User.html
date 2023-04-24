@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>cpu查看</title>
+
+  <style>
+
+    .demo-table-expand {
+      font-size: 0;
+    }
+    .demo-table-expand label {
+      width: 90px;
+      color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+      margin-right: 0;
+      margin-bottom: 0;
+      width: 50%;
+    }
+
+
+    /*分行颜色*/
+    .el-table .warning-row {
+      background: oldlace;
+    }
+
+    .el-table .success-row {
+      background: #f0f9eb;
+    }
+
+    .el-menu {
+      height: 100vh;
+    }
+    .el-aside::-webkit-scrollbar {
+
+      display: none;
+
+    }
+  </style>
+</head>
+<body>
+<div id="ele">
+
+
+  <!--表单-->
+  <el-container>
+    <el-aside width="200px" style="hight:100%">
+      <el-row class="tac" style="hight:100%">
+        <el-col style="hight:100%" >
+          <el-menu
+              default-active="2"
+              class="el-menu-vertical-demo"
+              @open="handleOpen"
+              @close="handleClose"
+              background-color="#545c64"
+              text-color="#fff"
+              active-text-color="#ffd04b"
+              style="hight:100%">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>导航一</span>
+            </template>
+            <el-menu-item-group>
+              <el-submenu index="1-1">
+                <template slot="title">硬件信息</template>
+                <el-menu-item index="1-1-1" @click="goUrl('Cpu.html')">cpu信息</el-menu-item>
+                <el-menu-item index="1-1-1" @click="goUrl('Gpu.html')">Gpu信息</el-menu-item>
+                <el-menu-item index="1-1-1" @click="goUrl('Mainboard.html')">主板信息</el-menu-item>
+                <el-menu-item index="1-1-1" @click="goUrl('Ram.html')">内存信息</el-menu-item>
+                <el-menu-item index="1-1-1" @click="goUrl('Rom.html')">硬盘信息</el-menu-item>
+                <el-menu-item index="1-1-1" @click="goUrl('Power.html')">电源信息</el-menu-item>
+                <el-menu-item index="1-1-1" @click="goUrl('Case.html')">机箱信息</el-menu-item>
+              </el-submenu>
+              <el-menu-item index="1-2" @click="goUrl('User.html')">用户信息</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group title="分组2">
+              <el-menu-item index="1-3" @click="goUrl('UserHw.html')">用户装配</el-menu-item>
+            </el-menu-item-group>
+          </el-menu>
+        </el-col>
+      </el-row>
+
+    </el-aside>
+
+    <el-main>
+
+
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="硬件类型">
+          <el-select v-model="formInline.region" placeholder="硬件类型">
+            <el-option label="CPU" value="cpu"></el-option>
+            <el-option label="GPU" value="gpu"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="硬件名称">
+          <el-input v-model="formInline.user" placeholder="硬件名称"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
+
+      <!--按钮-->
+      <el-row>
+        <el-button type="danger" @click="deleteByIds" plain>批量删除</el-button>
+        <!--dialogVisible = true-->
+      </el-row>
+
+      <!--添加数据的具体对话框-->
+
+      <el-dialog
+          title="提示"
+          :visible.sync="dialogVisible"
+          width="30%"
+          :before-close="handleClose1">
+        <el-form ref="form" :model="form" label-width="80px">
+          <el-form-item label="名称">
+            <el-input v-model="form.cpuName"></el-input>
+          </el-form-item>
+          <el-form-item label="价格">
+            <el-input v-model="form.cpuPrice"></el-input>
+          </el-form-item>
+          <el-form-item label="核心数">
+            <el-input v-model="form.cpuCore"></el-input>
+          </el-form-item>
+          <el-form-item label="线程数">
+            <el-input v-model="form.cpuThread"></el-input>
+          </el-form-item>
+          <el-form-item label="是否有核显" ><h></h>
+            <el-switch v-model="form.cpuHaveGpu"></el-switch>
+          </el-form-item>
+          <el-form-item label="主频" ><h></h>
+            <el-input v-model="form.cpuClockSpeed"></el-input>
+          </el-form-item>
+          <el-form-item label="额定功耗">
+            <el-input v-model="form.cpuPll"></el-input>
+          </el-form-item>
+          <el-form-item>
+
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="addText" >立即创建</el-button>
+            <el-button @click="dialogVisible = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
+
+      <!--修改数据对话框-->
+      <el-dialog
+          title="提示"
+          :visible.sync="dialogVisible2"
+          width="30%"
+          :before-close="handleClose1">
+        <el-form ref="form" :model="rowData" label-width="80px">
+          <el-form-item label="名称">
+            <el-input v-model="rowData.cpuName"></el-input>
+          </el-form-item>
+          <el-form-item label="价格">
+            <el-input v-model="rowData.cpuPrice"></el-input>
+          </el-form-item>
+          <el-form-item label="核心数">
+            <el-input v-model="rowData.cpuCore"></el-input>
+          </el-form-item>
+          <el-form-item label="线程数">
+            <el-input v-model="rowData.cpuThread"></el-input>
+          </el-form-item>
+          <el-form-item label="是否有核显" ><h></h>
+            <el-switch v-model="rowData.cpuHaveGpu"></el-switch>
+          </el-form-item>
+          <el-form-item label="主频" ><h></h>
+            <el-input v-model="rowData.cpuClockSpeed"></el-input>
+          </el-form-item>
+          <el-form-item label="额定功耗">
+            <el-input v-model="rowData.cpuPll"></el-input>
+          </el-form-item>
+          <el-form-item>
+
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="revisetext" >修改</el-button>
+            <el-button @click="dialogVisible2 = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
+      <!--表格-->
+      <template>
+        <el-table :data="UserData">
+          <el-table-column property="userid" label="用户id" width="200"></el-table-column>
+          <el-table-column property="username" label="username" width="200"></el-table-column>
+          <el-table-column property="password" label="密码"></el-table-column>
+          <el-table-column
+              align="center"
+              label="操作">
+            <!--        <el-row>
+                      <el-button type="primary">编辑</el-button>
+                      <el-button type="danger" @click="deletethis(scope.row)">删除</el-button>
+                    </el-row>-->
+            <template slot-scope="scope">
+              <el-button  type="primary" @click="deleteRow(scope.row)">删除</el-button>
+              <el-button  type="danger" @click="deleteRow(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+
+        </el-table>
+      </template>
+
+      <!--分页-->
+<!--      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage4"
+          :page-sizes="[5, 10,]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400">
+      </el-pagination>-->
+    </el-main>
+  </el-container>
+
+
+
+  //导航栏
+
+
+
+
+</div>
+
+
+
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui@2.15.13/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui@2.15.13/lib/index.js"></script>
+
+<script>
+  new Vue({
+    el:"#ele",
+
+
+    //获取cpu数据
+    mounted(){
+
+
+      this.selectAll()
+
+
+    },
+    methods: {
+      selectAll() {
+        var _this = this;
+        axios({
+          method: "get",
+          url: "http://localhost:8080/WebDemo/userServlet/selectAll"
+        }).then(function (resp) {
+          _this.UserData = resp.data;
+          console.log(_this.UserData)
+        })
+
+      },
+
+
+      tableRowClassName({row, rowIndex}) {
+        if (rowIndex === 1) {
+          return 'warning-row';
+        } else if (rowIndex === 3) {
+          return 'success-row';
+        }
+        return '';
+      },
+      /*复选框选中后的方法*/
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+
+        console.log(this.multipleSelection)
+      },
+      //查询方法
+      onSubmit() {
+        console.log(this.formInline);
+      },
+      //强行关闭对话框提示
+      handleClose1(done) {
+        this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {
+            });
+      },
+
+      //添加或者修改数据页面
+      additem(){
+        this.dialogVisible = true;
+        this.from=[];
+      },
+      //添加数据
+      addText() {
+        // console.log(this.form);
+
+        var _this = this
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/cpuServlet/add",
+          data: _this.form
+        }).then(function (resp) {
+          if (resp.data == "success") {
+            _this.dialogVisible = false;
+            _this.selectAll();
+            _this.$message({
+              message: '恭喜你，添加成功',
+              type: 'success'
+            });
+          }
+        })
+      },
+      //分页
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      },
+
+
+      //批量删除
+      deleteByIds() {
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          let selectionElement = this.multipleSelection[i];
+          this.selectedIds[i] = selectionElement.cpuId;
+          console.log(this.selectedIds)
+        }
+        var _this = this;
+
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/cpuServlet/deleteByIds",
+          data: _this.selectedIds
+        }).then(function (resp) {
+          if (resp.data == "success") {
+            _this.selectAll();
+            _this.$message({
+              message: '恭喜你，删除成功',
+              type: 'success'
+            });
+          }
+        })
+      },
+//侧边导航栏
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      },
+
+      //跳转
+
+      goUrl(url) {
+        window.open(url, "_self")
+      },
+
+
+      //单个删除
+      deleteRow(row) {
+        this.deleteId = row.userid;
+        var _this = this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/addServlet/deleteByUserId",
+          data: _this.deleteId,
+        }).then(function (resp) {
+          if (resp.data == "success") {
+            _this.selectAll();
+            _this.$message({
+              message: '恭喜你，删除成功',
+              type: 'success'
+            });
+          }
+        })
+      },
+
+
+      //单个修改唤出界面
+      revise(row){
+        this.dialogVisible2=true;
+        this.rowData=row;
+        console.log(this.rowData);
+      },
+
+
+      // 修改按键
+      revisetext(){
+        _this=this;
+        axios({
+          method: "post",
+          url: "http://localhost:8080/WebDemo/cpuServlet/revise",
+          data: _this.rowData,
+        }).then(function (resp){
+          if (resp.data == "success") {
+            _this.dialogVisible2 = false;
+            _this.selectAll();
+            _this.$message({
+              message: '恭喜你，修改成功',
+              type: 'success'
+            });
+          }
+
+        })
+
+      }
+
+
+
+
+
+
+
+
+
+
+
+    },//methods收回},
+    data() {
+      return {
+        //分页数据
+        currentPage4: 4,
+
+// 表单返回数据
+        form: {
+          cpuName: '',
+          cpuPrice:'',
+          //date1: '',//发布日期
+          //thread:'',//频率
+          cpuCore:'',//核心
+          cpuPll:'',//功耗
+          cpuThread:'',//线程
+          cpuHaveGpu:false,
+          cpuClockSpeed:'',
+        },
+        /*对话框是否显示*/
+        dialogVisible: false,
+        //表单搜索数据
+        formInline: {
+          user: '',
+          region: ''
+        },
+//复选框数据集合
+        multipleSelection:[],
+        //表格数据
+        UserData: [],
+        //修改数据
+        rowData:[],
+
+        //删除选中的数据
+        selectedIds:[],
+
+        //删除当前行
+        deleteId:'',
+        dialogVisible2: false,
+
+      }
+    }
+  })
+
+</script>
+</body>
+</html>
+
+
+<!--{
+            cpuId:'',
+            cpuName:'',
+            cpuPrice:'',
+            cpuCore:'',
+            cpuThead:'',
+            cpuHaveGpu:'',
+            cpuImage:'',
+            cpuPll:''
+
+
+
+
+
+                    form: {
+          gpuName: '',
+          gpuPrice:'',
+          //date1: '',//发布日期
+          //thread:'',//频率
+          gpuFreq:'',//频率
+          gpuMemfreq:'',//显存频率
+          gpuMem:'',//显存
+        },
+          }-->

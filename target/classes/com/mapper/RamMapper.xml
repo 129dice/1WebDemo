@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.mapper.RamMapper">
+    <!--名称不同不能自动封装-->
+    <resultMap id="ramResultMap" type="com.pojo.Ram">
+        <result column="ram_id" property="ramId"/>
+        <result column="ram_name" property="ramName"/>
+        <result column="ram_cap" property="ramCap"/>
+        <result column="ram_company" property="ramCompany"/>
+        <result column="ram_freq" property="ramFreq"/>
+        <result column="ram_price" property="ramPrice"/>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="ramId">
+        insert into item_ram(ram_name, ram_cap, ram_company, ram_freq, ram_price)
+        VALUES (#{ramName},#{ramCap},#{ramCompany},#{ramFreq},#{ramPrice});
+
+    </insert>
+    <update id="revise">
+        update item_ram SET
+            ram_name=#{ramName},
+            ram_cap=#{ramCap},
+            ram_company=#{ramCompany},
+            ram_freq=#{ramFreq},
+            ram_id =#{ramPrice}
+         where ram_id = #{ramId}
+    </update>
+
+
+    <delete id="deleteByIds">
+        delete from item_ram where ram_id in
+        <foreach collection="ids" item="ram_id" separator="," open="(" close=")">
+            #{ram_id}
+
+        </foreach>
+
+
+    </delete>
+    <delete id="deleteByRamId">
+        delete from  item_ram where ram_id =#{id}
+
+    </delete>
+
+    <select id="selectAll" resultMap="ramResultMap">
+        select * from item_ram;
+    </select>
+
+
+    <select id="rcAll" resultMap="ramResultMap">
+        select *from item_ram where Ram_NAME in(#{ram1},#{ram2});
+    </select>
+</mapper>
